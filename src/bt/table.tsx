@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { data } from './data';
 
@@ -113,6 +113,24 @@ const Table = () => {
         }
     };
 
+    // Phân Trang
+    const [size, setSize] = useState(2); // kích thước phần tử trên 1 trang
+    const [currentPage, setCurrentPage] = useState(4); // số trang hiện tại
+
+    const totalPages = useMemo(() => {
+        return Math.ceil(students.length / size)
+    }, [students, size]);
+
+    // Lọc các phần tử theo page và size, chức năng tìm kiếm theo email
+    const filterData = useMemo(() => {
+        const filtered = students.filter(student =>
+            student.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        const start = (currentPage - 1) * size;
+        const end = currentPage * size;
+        return filtered.slice(start, end);
+    }, [students, searchQuery, currentPage, size]);
+
     return (
         <div>
             <div className="row">
@@ -211,7 +229,7 @@ const Table = () => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Đóng</button>
-                                <button type="button" className="btn btn-primary" onClick={saveEditedStudent}>Lưu Thay Đổi</button>
+                                <button type="button" className="btn btn-primary" onClick={saveEditedStudent}>Lưu</button>
                             </div>
                         </div>
                     </div>
@@ -229,16 +247,15 @@ const Table = () => {
                             </div>
                         </th>
                         <th scope="col">ID</th>
-                        <th scope="col">Tên</th>
-                        <th scope="col">Tuổi</th>
-                        <th scope="col">Địa chỉ</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Address</th>
                         <th scope="col">Tags</th>
-                        <th>Due</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {students.map((student) => (
+                    {filterData.map((student) => (
                         <tr key={student.id}>
                             <td>
                                 <div className="form-check">
@@ -255,7 +272,6 @@ const Table = () => {
                                     {tag.trim()}
                                 </span>
                             ))}</td>
-                            <td>Due</td>
                             <td>
                                 <button onClick={() => handleDelete(student.id)} className="btn btn-danger me-2">Xóa</button>
                                 <button onClick={() => handleEdit(student.id)} className="btn btn-primary">Sửa</button>
@@ -264,6 +280,29 @@ const Table = () => {
                     ))}
                 </tbody>
             </table>
+
+            <footer className="d-flex justify-content-end align-items-center gap-3">
+                <select className="form-select" value={size} onChange={(e) => setSize(+e.target.value)}>
+                    <option value={2}>Hiển thị 2 bản ghi trên trang</option>
+                    <option value={5}>Hiển thị 5 bản ghi trên trang</option>
+                    <option value={8}>Hiển thị 8 bản ghi trên trang</option>
+                    <option value={10}>Hiển thị 10 bản ghi trên trang</option>
+                </select>
+                <ul className="pagination">
+                    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                        <a onClick={() => setCurrentPage(currentPage - 1)} className="page-link" href="#">
+                            Previous
+                        </a>
+                    </li>
+                    {/* đổ ra số trang tương ứng với số thẻ li */}
+                    {
+                        Array.from(new Array(totalPages), (_, index) => index + 1).map((page, index) =>
+                            <li key={index} className={`page-item ${currentPage === page ? "active" : ""}`}><a onClick={() => setCurrentPage(page)} className="page-link" href="#">{index + 1}</a></li>
+                        )
+                    }
+                    <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}><a onClick={() => setCurrentPage(currentPage + 1)} className="page-link" href="#">Next</a></li>
+                </ul>
+            </footer>
         </div>
     );
 };

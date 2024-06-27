@@ -10,17 +10,17 @@ const Sidebar = () => {
       <div className="mb-4">
         <a href="#Dashboard" className="d-flex align-items-center mb-2 text-decoration-none">
           <HouseDoor className="me-2" />
-          Dashboard
+          Home
         </a>
 
         <a href="#LabTest" className="d-flex align-items-center mb-2 text-decoration-none text-dark">
           <FileText className="me-2" />
-          Lab Test
+          TKB
         </a>
 
         <a href="#Appointment" className="d-flex align-items-center mb-2 text-decoration-none text-dark">
           <Calendar2Check className="me-2" />
-          Appointment
+          Lịch Trình
         </a>
 
         <a href="#Message" className="d-flex align-items-center mb-2 text-decoration-none text-dark">

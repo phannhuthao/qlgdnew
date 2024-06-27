@@ -2,7 +2,6 @@ import './App.css'
 import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from './bt/sidebar';
-import Search from './bt/search';
 import Table from './bt/table';
 
 function App() {
@@ -16,8 +15,7 @@ function App() {
         <Sidebar></Sidebar>
         </Col>
         <Col xs={10} id="page-content-wrapper">
-          {/* <Search></Search> */}
-          <h1 className='title'>Table Information</h1>
+          <h1 className='title'>Table Information Student</h1>
           <Table></Table>
          </Col>
       </Row>
